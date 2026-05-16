@@ -1,4 +1,4 @@
-package com.integrafabrica.backend.service;
+package com.integrafabrica.backend.service.impl;
 
 import com.integrafabrica.backend.dto.CategoryResponseDTO;
 import com.integrafabrica.backend.dto.LocationResponseDTO;
@@ -11,6 +11,8 @@ import com.integrafabrica.backend.exception.ResourceNotFoundException;
 import com.integrafabrica.backend.repository.CategoryRepository;
 import com.integrafabrica.backend.repository.LocationRepository;
 import com.integrafabrica.backend.repository.ProductRepository;
+import com.integrafabrica.backend.service.ProductService;
+
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;

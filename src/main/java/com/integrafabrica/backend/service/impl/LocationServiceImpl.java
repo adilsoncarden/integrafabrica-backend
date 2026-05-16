@@ -1,10 +1,12 @@
-package com.integrafabrica.backend.service;
+package com.integrafabrica.backend.service.impl;
 
 import com.integrafabrica.backend.dto.LocationRequestDTO;
 import com.integrafabrica.backend.dto.LocationResponseDTO;
 import com.integrafabrica.backend.model.Location;
 import com.integrafabrica.backend.exception.ResourceNotFoundException;
 import com.integrafabrica.backend.repository.LocationRepository;
+import com.integrafabrica.backend.service.LocationService;
+
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;

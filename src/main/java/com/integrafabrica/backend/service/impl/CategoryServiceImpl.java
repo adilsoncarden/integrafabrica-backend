@@ -1,10 +1,12 @@
-package com.integrafabrica.backend.service;
+package com.integrafabrica.backend.service.impl;
 
 import com.integrafabrica.backend.dto.CategoryRequestDTO;
 import com.integrafabrica.backend.dto.CategoryResponseDTO;
 import com.integrafabrica.backend.model.Category;
 import com.integrafabrica.backend.exception.ResourceNotFoundException;
 import com.integrafabrica.backend.repository.CategoryRepository;
+import com.integrafabrica.backend.service.CategoryService;
+
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
