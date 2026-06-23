@@ -14,6 +14,8 @@ import com.integrafabrica.backend.exception.ResourceNotFoundException;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,9 +36,7 @@ public class MovementServiceImpl implements MovementService {
     @Override
     @Transactional
     public MovementResponseDTO createMovement(MovementRequestDTO request) {
-        User user = userRepository.findById(request.getPerformedBy())
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        "Usuario ejecutor no encontrado con ID: " + request.getPerformedBy()));
+        User user = resolvePerformedByUser(request.getPerformedBy());
 
         Supplier supplier = null;
         if (request.getSupplierId() != null) {
@@ -71,7 +71,7 @@ public class MovementServiceImpl implements MovementService {
     @Override
     @Transactional(readOnly = true)
     public List<MovementResponseDTO> getMovementsByType(String type) {
-        return movementRepository.findByMovementTypeOrderByIdDesc(type).stream()
+        return movementRepository.findByMovementTypeOrderByIdDesc(type.toLowerCase()).stream()
                 .map(this::mapToResponseDTO)
                 .collect(Collectors.toList());
     }
@@ -90,9 +90,7 @@ public class MovementServiceImpl implements MovementService {
         Movement movement = movementRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Movimiento no encontrado con el ID: " + id));
 
-        User user = userRepository.findById(request.getPerformedBy())
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        "Usuario ejecutor no encontrado con ID: " + request.getPerformedBy()));
+        User user = resolvePerformedByUser(request.getPerformedBy());
 
         Supplier supplier = null;
         if (request.getSupplierId() != null) {
@@ -118,6 +116,24 @@ public class MovementServiceImpl implements MovementService {
         Movement movement = movementRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Movimiento no encontrado con el ID: " + id));
         movementRepository.delete(movement);
+    }
+
+    private User resolvePerformedByUser(Long performedById) {
+        if (performedById != null) {
+            return userRepository.findById(performedById)
+                    .orElseThrow(() -> new ResourceNotFoundException(
+                            "Usuario ejecutor no encontrado con ID: " + performedById));
+        }
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()
+                || "anonymousUser".equals(authentication.getPrincipal())) {
+            throw new IllegalArgumentException("No se pudo determinar el usuario autenticado.");
+        }
+
+        return userRepository.findByUsername(authentication.getName())
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Usuario autenticado no encontrado: " + authentication.getName()));
     }
 
     private MovementResponseDTO mapToResponseDTO(Movement movement) {

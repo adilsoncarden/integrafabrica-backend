@@ -2,7 +2,6 @@ package com.integrafabrica.backend.module.movement.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
 public class MovementRequestDTO {
@@ -24,7 +23,6 @@ public class MovementRequestDTO {
     @JsonProperty("reference_document_number")
     private String referenceDocumentNumber;
 
-    @NotNull(message = "El ID del usuario ejecutor (performed_by) es obligatorio.")
     @JsonProperty("performed_by")
     private Long performedBy;
 
