@@ -120,7 +120,7 @@ public class MovementServiceImpl implements MovementService {
 
     private User resolvePerformedByUser(Long performedById) {
         if (performedById != null) {
-            return userRepository.findById(performedById)
+            return userRepository.findByIdWithRole(performedById)
                     .orElseThrow(() -> new ResourceNotFoundException(
                             "Usuario ejecutor no encontrado con ID: " + performedById));
         }
