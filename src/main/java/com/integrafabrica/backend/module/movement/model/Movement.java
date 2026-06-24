@@ -2,6 +2,7 @@ package com.integrafabrica.backend.module.movement.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -28,7 +29,7 @@ public class Movement {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String reason;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "supplier_id", nullable = true) // Es opcional según el diagrama (0..1)
     private Supplier supplier;
 
@@ -38,7 +39,7 @@ public class Movement {
     @Column(name = "reference_document_number", length = 50)
     private String referenceDocumentNumber;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "performed_by", nullable = false)
     private User performedBy;
 
