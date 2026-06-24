@@ -46,4 +46,17 @@ public interface ProductBatchRepository extends JpaRepository<ProductBatch, Long
     Optional<ProductBatch> findByBatchCode(String batchCode);
 
     boolean existsByBatchCode(String batchCode);
+
+    @Query("""
+            SELECT DISTINCT b FROM ProductBatch b
+            JOIN FETCH b.product p
+            JOIN FETCH p.category
+            JOIN FETCH p.location
+            WHERE b.expirationDate BETWEEN :startDate AND :endDate
+            ORDER BY b.expirationDate ASC
+            """)
+    java.util.List<ProductBatch> findExpiringBetween(
+            @Param("startDate") java.time.LocalDate startDate,
+            @Param("endDate") java.time.LocalDate endDate,
+            org.springframework.data.domain.Pageable pageable);
 }

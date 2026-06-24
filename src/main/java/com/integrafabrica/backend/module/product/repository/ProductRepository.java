@@ -33,4 +33,16 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     Optional<Product> findBySku(String sku);
 
     boolean existsBySku(String sku);
+
+    @Query("SELECT COALESCE(SUM(p.stock), 0) FROM Product p")
+    java.math.BigDecimal sumTotalStock();
+
+    @Query("""
+            SELECT DISTINCT p FROM Product p
+            JOIN FETCH p.category
+            JOIN FETCH p.location
+            WHERE p.stock < p.minStock
+            ORDER BY p.stock ASC
+            """)
+    java.util.List<Product> findLowStockProducts(org.springframework.data.domain.Pageable pageable);
 }
