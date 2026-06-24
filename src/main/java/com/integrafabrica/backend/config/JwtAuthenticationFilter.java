@@ -8,9 +8,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.dao.DataAccessException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -44,29 +46,39 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String jwt = authHeader.substring(7);
 
         try {
-            final String username = jwtService.extractUsername(jwt);
+            if (SecurityContextHolder.getContext().getAuthentication() == null && jwtService.isTokenValid(jwt)) {
+                final String username = jwtService.extractUsername(jwt);
+                List<SimpleGrantedAuthority> authorities = jwtService.extractAuthorities(jwt).stream()
+                        .map(SimpleGrantedAuthority::new)
+                        .toList();
 
-            if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
-                if (jwtService.isTokenValid(jwt, userDetails)) {
-                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                            userDetails,
-                            null,
-                            userDetails.getAuthorities());
-                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                    SecurityContextHolder.getContext().setAuthentication(authToken);
+                if (authorities.isEmpty()) {
+                    // Legacy tokens (pre-authorities claim): single DB lookup; re-login avoids this path.
+                    UserDetails loaded = userDetailsService.loadUserByUsername(username);
+                    authorities = loaded.getAuthorities().stream()
+                            .map(a -> new SimpleGrantedAuthority(a.getAuthority()))
+                            .toList();
                 }
+
+                UserDetails userDetails = User.builder()
+                        .username(username)
+                        .password("")
+                        .authorities(authorities)
+                        .build();
+
+                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                        userDetails,
+                        null,
+                        userDetails.getAuthorities());
+                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                SecurityContextHolder.getContext().setAuthentication(authToken);
             }
         } catch (UsernameNotFoundException ex) {
             log.warn("JWT subject not found in database: {}", ex.getMessage());
+            SecurityContextHolder.clearContext();
         } catch (JwtException | IllegalArgumentException ex) {
             log.warn("Invalid JWT token: {}", ex.getMessage());
-        } catch (DataAccessException ex) {
-            log.error("Database error during JWT authentication", ex);
             SecurityContextHolder.clearContext();
-            response.sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE,
-                    "Servicio de autenticación no disponible");
-            return;
         }
 
         filterChain.doFilter(request, response);
