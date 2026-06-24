@@ -12,8 +12,8 @@ import com.integrafabrica.backend.module.supplier.model.Supplier;
 import com.integrafabrica.backend.module.supplier.repository.SupplierRepository;
 import com.integrafabrica.backend.exception.ResourceNotFoundException;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -62,18 +62,16 @@ public class MovementServiceImpl implements MovementService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<MovementResponseDTO> getAllMovements() {
-        return movementRepository.findAllByOrderByIdDesc().stream()
-                .map(this::mapToResponseDTO)
-                .collect(Collectors.toList());
+    public Page<MovementResponseDTO> getAllMovements(Pageable pageable) {
+        return movementRepository.findAllWithRelations(pageable)
+                .map(this::mapToResponseDTO);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<MovementResponseDTO> getMovementsByType(String type) {
-        return movementRepository.findByMovementTypeOrderByIdDesc(type.toLowerCase()).stream()
-                .map(this::mapToResponseDTO)
-                .collect(Collectors.toList());
+    public Page<MovementResponseDTO> getMovementsByType(String type, Pageable pageable) {
+        return movementRepository.findByMovementTypeWithRelations(type.toLowerCase(), pageable)
+                .map(this::mapToResponseDTO);
     }
 
     @Override

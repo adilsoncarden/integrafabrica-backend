@@ -7,8 +7,8 @@ import com.integrafabrica.backend.module.supplier.repository.SupplierRepository;
 import com.integrafabrica.backend.module.supplier.service.SupplierService;
 import com.integrafabrica.backend.exception.ResourceNotFoundException;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,10 +42,9 @@ public class SupplierServiceImpl implements SupplierService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<SupplierResponseDTO> getAllSuppliers() {
-        return supplierRepository.findAllByOrderByIdAsc().stream()
-                .map(this::mapToResponseDTO)
-                .collect(Collectors.toList());
+    public Page<SupplierResponseDTO> getAllSuppliers(Pageable pageable) {
+        return supplierRepository.findAllByOrderByIdAsc(pageable)
+                .map(this::mapToResponseDTO);
     }
 
     @Override

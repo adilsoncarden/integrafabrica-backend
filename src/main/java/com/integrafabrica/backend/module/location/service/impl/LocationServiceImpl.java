@@ -7,8 +7,8 @@ import com.integrafabrica.backend.module.location.repository.LocationRepository;
 import com.integrafabrica.backend.module.location.service.LocationService;
 import com.integrafabrica.backend.exception.ResourceNotFoundException;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,10 +38,9 @@ public class LocationServiceImpl implements LocationService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<LocationResponseDTO> getAllLocations() {
-        return locationRepository.findAllByOrderByIdAsc().stream()
-                .map(this::mapToResponseDTO)
-                .collect(Collectors.toList());
+    public Page<LocationResponseDTO> getAllLocations(Pageable pageable) {
+        return locationRepository.findAllByOrderByIdAsc(pageable)
+                .map(this::mapToResponseDTO);
     }
 
     @Override

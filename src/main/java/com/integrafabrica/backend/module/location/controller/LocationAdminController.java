@@ -5,7 +5,10 @@ import com.integrafabrica.backend.module.location.dto.LocationResponseDTO;
 import com.integrafabrica.backend.module.location.service.LocationService;
 
 import jakarta.validation.Valid;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -34,8 +37,9 @@ public class LocationAdminController {
     }
 
     @GetMapping("")
-    public ResponseEntity<List<LocationResponseDTO>> getAllLocations() {
-        return ResponseEntity.ok(locationService.getAllLocations());
+    public ResponseEntity<Page<LocationResponseDTO>> getAllLocations(
+            @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
+        return ResponseEntity.ok(locationService.getAllLocations(pageable));
     }
 
     @GetMapping("/{id}")

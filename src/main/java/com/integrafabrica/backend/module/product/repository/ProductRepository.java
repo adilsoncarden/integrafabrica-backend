@@ -1,7 +1,8 @@
 package com.integrafabrica.backend.module.product.repository;
 
-import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,13 +13,14 @@ import com.integrafabrica.backend.module.product.model.Product;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
-    @Query("""
-            SELECT DISTINCT p FROM Product p
-            JOIN FETCH p.category
-            JOIN FETCH p.location
-            ORDER BY p.id ASC
-            """)
-    List<Product> findAllByOrderByIdAsc();
+    @Query(
+            value = """
+                    SELECT DISTINCT p FROM Product p
+                    JOIN FETCH p.category
+                    JOIN FETCH p.location
+                    """,
+            countQuery = "SELECT COUNT(DISTINCT p) FROM Product p")
+    Page<Product> findAllWithRelations(Pageable pageable);
 
     @Query("""
             SELECT DISTINCT p FROM Product p

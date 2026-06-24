@@ -4,11 +4,13 @@ import java.util.List;
 
 import com.integrafabrica.backend.module.productbatch.dto.ProductBatchRequestDTO;
 import com.integrafabrica.backend.module.productbatch.dto.ProductBatchResponseDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface ProductBatchService {
     ProductBatchResponseDTO createBatch(ProductBatchRequestDTO request);
 
-    List<ProductBatchResponseDTO> getAllBatches();
+    Page<ProductBatchResponseDTO> getAllBatches(Pageable pageable);
 
     List<ProductBatchResponseDTO> getBatchesByProductId(Long productId);
 

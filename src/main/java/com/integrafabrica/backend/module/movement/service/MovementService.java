@@ -1,16 +1,16 @@
 package com.integrafabrica.backend.module.movement.service;
 
-import java.util.List;
-
 import com.integrafabrica.backend.module.movement.dto.MovementRequestDTO;
 import com.integrafabrica.backend.module.movement.dto.MovementResponseDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface MovementService {
     MovementResponseDTO createMovement(MovementRequestDTO request);
 
-    List<MovementResponseDTO> getAllMovements();
+    Page<MovementResponseDTO> getAllMovements(Pageable pageable);
 
-    List<MovementResponseDTO> getMovementsByType(String type);
+    Page<MovementResponseDTO> getMovementsByType(String type, Pageable pageable);
 
     MovementResponseDTO getMovementById(Long id);
 

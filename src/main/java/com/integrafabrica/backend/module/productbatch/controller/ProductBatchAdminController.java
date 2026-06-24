@@ -6,6 +6,10 @@ import com.integrafabrica.backend.module.productbatch.service.ProductBatchServic
 
 import jakarta.validation.Valid;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -34,8 +38,9 @@ public class ProductBatchAdminController {
     }
 
     @GetMapping("")
-    public ResponseEntity<List<ProductBatchResponseDTO>> getAllBatches() {
-        return ResponseEntity.ok(productBatchService.getAllBatches());
+    public ResponseEntity<Page<ProductBatchResponseDTO>> getAllBatches(
+            @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
+        return ResponseEntity.ok(productBatchService.getAllBatches(pageable));
     }
 
     @GetMapping("producto/{productId}")

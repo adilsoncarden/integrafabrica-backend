@@ -1,7 +1,8 @@
 package com.integrafabrica.backend.module.movement.repository;
 
-import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,24 +13,30 @@ import com.integrafabrica.backend.module.movement.model.Movement;
 @Repository
 public interface MovementRepository extends JpaRepository<Movement, Long> {
 
-    @Query("""
-            SELECT DISTINCT m FROM Movement m
-            LEFT JOIN FETCH m.supplier
-            JOIN FETCH m.performedBy u
-            JOIN FETCH u.role
-            ORDER BY m.id DESC
-            """)
-    List<Movement> findAllByOrderByIdDesc();
+    @Query(
+            value = """
+                    SELECT DISTINCT m FROM Movement m
+                    LEFT JOIN FETCH m.supplier
+                    JOIN FETCH m.performedBy u
+                    JOIN FETCH u.role
+                    """,
+            countQuery = "SELECT COUNT(DISTINCT m) FROM Movement m")
+    Page<Movement> findAllWithRelations(Pageable pageable);
 
-    @Query("""
-            SELECT DISTINCT m FROM Movement m
-            LEFT JOIN FETCH m.supplier
-            JOIN FETCH m.performedBy u
-            JOIN FETCH u.role
-            WHERE m.movementType = :movementType
-            ORDER BY m.id DESC
-            """)
-    List<Movement> findByMovementTypeOrderByIdDesc(@Param("movementType") String movementType);
+    @Query(
+            value = """
+                    SELECT DISTINCT m FROM Movement m
+                    LEFT JOIN FETCH m.supplier
+                    JOIN FETCH m.performedBy u
+                    JOIN FETCH u.role
+                    WHERE m.movementType = :movementType
+                    """,
+            countQuery = """
+                    SELECT COUNT(DISTINCT m) FROM Movement m
+                    WHERE m.movementType = :movementType
+                    """)
+    Page<Movement> findByMovementTypeWithRelations(
+            @Param("movementType") String movementType, Pageable pageable);
 
     @Query("""
             SELECT DISTINCT m FROM Movement m
