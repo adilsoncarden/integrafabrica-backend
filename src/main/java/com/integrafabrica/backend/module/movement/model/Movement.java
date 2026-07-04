@@ -9,6 +9,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import java.time.LocalDateTime;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -52,12 +54,27 @@ public class Movement {
 
     public Movement(String movementType, String reason, Supplier supplier,
             String referenceDocumentType, String referenceDocumentNumber, User performedBy) {
-        this.movementType = movementType;
+        setMovementType(movementType); // Usamos el setter para estandarizar a mayúsculas
         this.reason = reason;
         this.supplier = supplier;
-        this.referenceDocumentType = referenceDocumentType;
+        setReferenceDocumentType(referenceDocumentType); // Usamos el setter para estandarizar a mayúsculas
         this.referenceDocumentNumber = referenceDocumentNumber;
         this.performedBy = performedBy;
+    }
+
+    /**
+     * Ciclo de vida de JPA: Fuerza la conversión a mayúsculas y limpia espacios
+     * en blanco antes de persistir o actualizar en la base de datos de Supabase.
+     */
+    @PrePersist
+    @PreUpdate
+    private void ensureConstraintsFormat() {
+        if (this.movementType != null) {
+            this.movementType = this.movementType.toUpperCase().trim();
+        }
+        if (this.referenceDocumentType != null) {
+            this.referenceDocumentType = this.referenceDocumentType.toUpperCase().trim();
+        }
     }
 
     // Getters y Setters
@@ -74,7 +91,7 @@ public class Movement {
     }
 
     public void setMovementType(String movementType) {
-        this.movementType = movementType;
+        this.movementType = (movementType != null) ? movementType.toUpperCase().trim() : null;
     }
 
     public String getReason() {
@@ -98,7 +115,8 @@ public class Movement {
     }
 
     public void setReferenceDocumentType(String referenceDocumentType) {
-        this.referenceDocumentType = referenceDocumentType;
+        this.referenceDocumentType = (referenceDocumentType != null) ? referenceDocumentType.toUpperCase().trim()
+                : null;
     }
 
     public String getReferenceDocumentNumber() {
