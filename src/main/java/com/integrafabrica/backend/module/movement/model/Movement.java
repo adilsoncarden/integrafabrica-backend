@@ -2,15 +2,17 @@ package com.integrafabrica.backend.module.movement.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import java.time.LocalDateTime;
 import org.hibernate.annotations.CreationTimestamp;
-
 import com.integrafabrica.backend.module.auth.model.User;
 import com.integrafabrica.backend.module.supplier.model.Supplier;
 
@@ -28,7 +30,7 @@ public class Movement {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String reason;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "supplier_id", nullable = true) // Es opcional según el diagrama (0..1)
     private Supplier supplier;
 
@@ -38,7 +40,7 @@ public class Movement {
     @Column(name = "reference_document_number", length = 50)
     private String referenceDocumentNumber;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "performed_by", nullable = false)
     private User performedBy;
 
@@ -51,12 +53,27 @@ public class Movement {
 
     public Movement(String movementType, String reason, Supplier supplier,
             String referenceDocumentType, String referenceDocumentNumber, User performedBy) {
-        this.movementType = movementType;
+        setMovementType(movementType); // Usamos el setter para estandarizar a mayúsculas
         this.reason = reason;
         this.supplier = supplier;
-        this.referenceDocumentType = referenceDocumentType;
+        setReferenceDocumentType(referenceDocumentType); // Usamos el setter para estandarizar a mayúsculas
         this.referenceDocumentNumber = referenceDocumentNumber;
         this.performedBy = performedBy;
+    }
+
+    /**
+     * Ciclo de vida de JPA: Fuerza la conversión a mayúsculas y limpia espacios
+     * en blanco antes de persistir o actualizar en la base de datos de Supabase.
+     */
+    @PrePersist
+    @PreUpdate
+    private void ensureConstraintsFormat() {
+        if (this.movementType != null) {
+            this.movementType = this.movementType.toUpperCase().trim();
+        }
+        if (this.referenceDocumentType != null) {
+            this.referenceDocumentType = this.referenceDocumentType.toUpperCase().trim();
+        }
     }
 
     // Getters y Setters
@@ -73,7 +90,7 @@ public class Movement {
     }
 
     public void setMovementType(String movementType) {
-        this.movementType = movementType;
+        this.movementType = (movementType != null) ? movementType.toUpperCase().trim() : null;
     }
 
     public String getReason() {
@@ -97,7 +114,8 @@ public class Movement {
     }
 
     public void setReferenceDocumentType(String referenceDocumentType) {
-        this.referenceDocumentType = referenceDocumentType;
+        this.referenceDocumentType = (referenceDocumentType != null) ? referenceDocumentType.toUpperCase().trim()
+                : null;
     }
 
     public String getReferenceDocumentNumber() {

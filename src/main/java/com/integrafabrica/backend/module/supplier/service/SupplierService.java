@@ -1,14 +1,14 @@
 package com.integrafabrica.backend.module.supplier.service;
 
-import java.util.List;
-
 import com.integrafabrica.backend.module.supplier.dto.SupplierRequestDTO;
 import com.integrafabrica.backend.module.supplier.dto.SupplierResponseDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface SupplierService {
     SupplierResponseDTO createSupplier(SupplierRequestDTO request);
 
-    List<SupplierResponseDTO> getAllSuppliers();
+    Page<SupplierResponseDTO> getAllSuppliers(Pageable pageable);
 
     SupplierResponseDTO getSupplierById(Long id);
 

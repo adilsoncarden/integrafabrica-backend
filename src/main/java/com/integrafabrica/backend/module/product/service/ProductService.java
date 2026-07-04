@@ -1,14 +1,14 @@
 package com.integrafabrica.backend.module.product.service;
 
-import java.util.List;
-
 import com.integrafabrica.backend.module.product.dto.ProductRequestDTO;
 import com.integrafabrica.backend.module.product.dto.ProductResponseDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface ProductService {
     ProductResponseDTO createProduct(ProductRequestDTO request);
 
-    List<ProductResponseDTO> getAllProducts();
+    Page<ProductResponseDTO> getAllProducts(Pageable pageable);
 
     ProductResponseDTO getProductById(Long id);
 

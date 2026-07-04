@@ -2,7 +2,6 @@ package com.integrafabrica.backend.module.productbatch.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.integrafabrica.backend.module.product.dto.ProductResponseDTO;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 

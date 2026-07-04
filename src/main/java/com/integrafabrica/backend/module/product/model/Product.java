@@ -13,7 +13,6 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-
 import com.integrafabrica.backend.module.category.model.Category;
 import com.integrafabrica.backend.module.location.model.Location;
 

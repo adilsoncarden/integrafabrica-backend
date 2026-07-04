@@ -12,9 +12,8 @@ import com.integrafabrica.backend.module.product.model.Product;
 import com.integrafabrica.backend.module.product.repository.ProductRepository;
 import com.integrafabrica.backend.module.product.service.ProductService;
 import com.integrafabrica.backend.exception.ResourceNotFoundException;
-
-import java.util.List;
-import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -63,10 +62,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<ProductResponseDTO> getAllProducts() {
-        return productRepository.findAllByOrderByIdAsc().stream()
-                .map(this::mapToResponseDTO)
-                .collect(Collectors.toList());
+    public Page<ProductResponseDTO> getAllProducts(Pageable pageable) {
+        return productRepository.findAllWithRelations(pageable)
+                .map(this::mapToResponseDTO);
     }
 
     @Override

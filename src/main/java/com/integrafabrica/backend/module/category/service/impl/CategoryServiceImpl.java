@@ -6,9 +6,8 @@ import com.integrafabrica.backend.module.category.model.Category;
 import com.integrafabrica.backend.module.category.repository.CategoryRepository;
 import com.integrafabrica.backend.module.category.service.CategoryService;
 import com.integrafabrica.backend.exception.ResourceNotFoundException;
-
-import java.util.List;
-import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,11 +33,9 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<CategoryResponseDTO> getAllCategories() {
-        return categoryRepository.findAllByOrderByIdAsc().stream()
-        // return categoryRepository.findAll().stream()
-                .map(this::mapToResponseDTO)
-                .collect(Collectors.toList());
+    public Page<CategoryResponseDTO> getAllCategories(Pageable pageable) {
+        return categoryRepository.findAllByOrderByIdAsc(pageable)
+                .map(this::mapToResponseDTO);
     }
 
     @Override

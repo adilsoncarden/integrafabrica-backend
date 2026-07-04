@@ -12,9 +12,10 @@ import com.integrafabrica.backend.module.product.repository.ProductRepository;
 import com.integrafabrica.backend.module.productbatch.model.ProductBatch;
 import com.integrafabrica.backend.module.productbatch.repository.ProductBatchRepository;
 import com.integrafabrica.backend.exception.ResourceNotFoundException;
-
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -58,6 +59,13 @@ public class MovementDetailServiceImpl implements MovementDetailService {
         MovementDetail savedDetail = movementDetailRepository.save(detail);
 
         return mapToResponseDTO(savedDetail);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<MovementDetailResponseDTO> getAllDetails(Pageable pageable) {
+        return movementDetailRepository.findAllWithRelations(pageable)
+                .map(this::mapToResponseDTO);
     }
 
     @Override

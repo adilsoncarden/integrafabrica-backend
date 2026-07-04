@@ -11,9 +11,10 @@ import com.integrafabrica.backend.module.supplier.dto.SupplierResponseDTO;
 import com.integrafabrica.backend.module.supplier.model.Supplier;
 import com.integrafabrica.backend.module.supplier.repository.SupplierRepository;
 import com.integrafabrica.backend.exception.ResourceNotFoundException;
-
-import java.util.List;
-import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,9 +35,7 @@ public class MovementServiceImpl implements MovementService {
     @Override
     @Transactional
     public MovementResponseDTO createMovement(MovementRequestDTO request) {
-        User user = userRepository.findById(request.getPerformedBy())
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        "Usuario ejecutor no encontrado con ID: " + request.getPerformedBy()));
+        User user = resolvePerformedByUser(request.getPerformedBy());
 
         Supplier supplier = null;
         if (request.getSupplierId() != null) {
@@ -62,18 +61,16 @@ public class MovementServiceImpl implements MovementService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<MovementResponseDTO> getAllMovements() {
-        return movementRepository.findAllByOrderByIdDesc().stream()
-                .map(this::mapToResponseDTO)
-                .collect(Collectors.toList());
+    public Page<MovementResponseDTO> getAllMovements(Pageable pageable) {
+        return movementRepository.findAllWithRelations(pageable)
+                .map(this::mapToResponseDTO);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<MovementResponseDTO> getMovementsByType(String type) {
-        return movementRepository.findByMovementTypeOrderByIdDesc(type).stream()
-                .map(this::mapToResponseDTO)
-                .collect(Collectors.toList());
+    public Page<MovementResponseDTO> getMovementsByType(String type, Pageable pageable) {
+        return movementRepository.findByMovementTypeWithRelations(type.toLowerCase(), pageable)
+                .map(this::mapToResponseDTO);
     }
 
     @Override
@@ -90,9 +87,7 @@ public class MovementServiceImpl implements MovementService {
         Movement movement = movementRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Movimiento no encontrado con el ID: " + id));
 
-        User user = userRepository.findById(request.getPerformedBy())
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        "Usuario ejecutor no encontrado con ID: " + request.getPerformedBy()));
+        User user = resolvePerformedByUser(request.getPerformedBy());
 
         Supplier supplier = null;
         if (request.getSupplierId() != null) {
@@ -118,6 +113,24 @@ public class MovementServiceImpl implements MovementService {
         Movement movement = movementRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Movimiento no encontrado con el ID: " + id));
         movementRepository.delete(movement);
+    }
+
+    private User resolvePerformedByUser(Long performedById) {
+        if (performedById != null) {
+            return userRepository.findByIdWithRole(performedById)
+                    .orElseThrow(() -> new ResourceNotFoundException(
+                            "Usuario ejecutor no encontrado con ID: " + performedById));
+        }
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()
+                || "anonymousUser".equals(authentication.getPrincipal())) {
+            throw new IllegalArgumentException("No se pudo determinar el usuario autenticado.");
+        }
+
+        return userRepository.findByUsername(authentication.getName())
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Usuario autenticado no encontrado: " + authentication.getName()));
     }
 
     private MovementResponseDTO mapToResponseDTO(Movement movement) {

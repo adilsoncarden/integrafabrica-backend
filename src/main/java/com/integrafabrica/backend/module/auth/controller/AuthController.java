@@ -3,7 +3,6 @@ package com.integrafabrica.backend.module.auth.controller;
 import com.integrafabrica.backend.module.auth.dto.AuthResponseDTO;
 import com.integrafabrica.backend.module.auth.dto.LoginRequestDTO;
 import com.integrafabrica.backend.module.auth.service.AuthService;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
