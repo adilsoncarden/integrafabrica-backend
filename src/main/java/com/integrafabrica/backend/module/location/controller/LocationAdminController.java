@@ -3,7 +3,6 @@ package com.integrafabrica.backend.module.location.controller;
 import com.integrafabrica.backend.module.location.dto.LocationRequestDTO;
 import com.integrafabrica.backend.module.location.dto.LocationResponseDTO;
 import com.integrafabrica.backend.module.location.service.LocationService;
-
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

@@ -3,7 +3,6 @@ package com.integrafabrica.backend.module.category.controller;
 import com.integrafabrica.backend.module.category.dto.CategoryRequestDTO;
 import com.integrafabrica.backend.module.category.dto.CategoryResponseDTO;
 import com.integrafabrica.backend.module.category.service.CategoryService;
-
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

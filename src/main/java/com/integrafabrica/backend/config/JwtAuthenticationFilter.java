@@ -18,7 +18,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-
 import java.io.IOException;
 import java.util.List;
 
@@ -53,7 +52,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         .toList();
 
                 if (authorities.isEmpty()) {
-                    // Legacy tokens (pre-authorities claim): single DB lookup; re-login avoids this path.
+                    // Legacy tokens (pre-authorities claim): single DB lookup; re-login avoids this
+                    // path.
                     UserDetails loaded = userDetailsService.loadUserByUsername(username);
                     authorities = loaded.getAuthorities().stream()
                             .map(a -> new SimpleGrantedAuthority(a.getAuthority()))

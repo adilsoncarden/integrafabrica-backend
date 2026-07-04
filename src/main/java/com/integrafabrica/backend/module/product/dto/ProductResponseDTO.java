@@ -2,7 +2,6 @@ package com.integrafabrica.backend.module.product.dto;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-
 import com.integrafabrica.backend.module.category.dto.CategoryResponseDTO;
 import com.integrafabrica.backend.module.location.dto.LocationResponseDTO;
 

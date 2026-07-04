@@ -6,7 +6,6 @@ import com.integrafabrica.backend.module.category.model.Category;
 import com.integrafabrica.backend.module.category.repository.CategoryRepository;
 import com.integrafabrica.backend.module.category.service.CategoryService;
 import com.integrafabrica.backend.exception.ResourceNotFoundException;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;

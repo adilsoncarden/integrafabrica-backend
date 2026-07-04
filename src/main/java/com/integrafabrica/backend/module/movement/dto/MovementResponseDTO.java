@@ -2,7 +2,6 @@ package com.integrafabrica.backend.module.movement.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.integrafabrica.backend.module.supplier.dto.SupplierResponseDTO;
-
 import java.time.LocalDateTime;
 
 public class MovementResponseDTO {

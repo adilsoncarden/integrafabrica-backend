@@ -3,7 +3,6 @@ package com.integrafabrica.backend.module.productbatch.controller;
 import com.integrafabrica.backend.module.productbatch.dto.ProductBatchRequestDTO;
 import com.integrafabrica.backend.module.productbatch.dto.ProductBatchResponseDTO;
 import com.integrafabrica.backend.module.productbatch.service.ProductBatchService;
-
 import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.data.domain.Page;

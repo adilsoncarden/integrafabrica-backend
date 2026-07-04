@@ -3,7 +3,6 @@ package com.integrafabrica.backend.module.movementdetail.controller;
 import com.integrafabrica.backend.module.movementdetail.dto.MovementDetailRequestDTO;
 import com.integrafabrica.backend.module.movementdetail.dto.MovementDetailResponseDTO;
 import com.integrafabrica.backend.module.movementdetail.service.MovementDetailService;
-
 import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.data.domain.Page;

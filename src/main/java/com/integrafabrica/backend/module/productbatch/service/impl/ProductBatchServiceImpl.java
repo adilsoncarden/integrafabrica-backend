@@ -11,7 +11,6 @@ import com.integrafabrica.backend.module.productbatch.model.ProductBatch;
 import com.integrafabrica.backend.module.productbatch.repository.ProductBatchRepository;
 import com.integrafabrica.backend.module.productbatch.service.ProductBatchService;
 import com.integrafabrica.backend.exception.ResourceNotFoundException;
-
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;

@@ -7,11 +7,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
-
 import com.integrafabrica.backend.module.movementdetail.model.MovementDetail;
 
-@Repository
 public interface MovementDetailRepository extends JpaRepository<MovementDetail, Long> {
 
     @Query("""
@@ -36,15 +33,13 @@ public interface MovementDetailRepository extends JpaRepository<MovementDetail, 
             """)
     Optional<MovementDetail> findById(@Param("id") Long id);
 
-    @Query(
-            value = """
-                    SELECT DISTINCT d FROM MovementDetail d
-                    JOIN FETCH d.movement
-                    JOIN FETCH d.product p
-                    JOIN FETCH p.category
-                    JOIN FETCH p.location
-                    LEFT JOIN FETCH d.productBatch
-                    """,
-            countQuery = "SELECT COUNT(DISTINCT d) FROM MovementDetail d")
+    @Query(value = """
+            SELECT DISTINCT d FROM MovementDetail d
+            JOIN FETCH d.movement
+            JOIN FETCH d.product p
+            JOIN FETCH p.category
+            JOIN FETCH p.location
+            LEFT JOIN FETCH d.productBatch
+            """, countQuery = "SELECT COUNT(DISTINCT d) FROM MovementDetail d")
     Page<MovementDetail> findAllWithRelations(Pageable pageable);
 }

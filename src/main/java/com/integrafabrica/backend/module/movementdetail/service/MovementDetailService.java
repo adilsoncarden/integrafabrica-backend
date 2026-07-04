@@ -1,7 +1,6 @@
 package com.integrafabrica.backend.module.movementdetail.service;
 
 import java.util.List;
-
 import com.integrafabrica.backend.module.movementdetail.dto.MovementDetailRequestDTO;
 import com.integrafabrica.backend.module.movementdetail.dto.MovementDetailResponseDTO;
 import org.springframework.data.domain.Page;

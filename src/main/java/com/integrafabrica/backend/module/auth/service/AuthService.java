@@ -5,7 +5,6 @@ import com.integrafabrica.backend.module.auth.dto.AuthResponseDTO;
 import com.integrafabrica.backend.module.auth.dto.LoginRequestDTO;
 import com.integrafabrica.backend.module.auth.model.User;
 import com.integrafabrica.backend.module.auth.repository.UserRepository;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;

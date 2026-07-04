@@ -7,9 +7,7 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-
 import org.springframework.security.core.GrantedAuthority;
-
 import java.security.Key;
 import java.util.Collections;
 import java.util.Date;
@@ -60,7 +58,6 @@ public class JwtService {
         return extractClaim(token, Claims::getSubject);
     }
 
-    @SuppressWarnings("unchecked")
     public List<String> extractAuthorities(String token) {
         Object raw = extractAllClaims(token).get(AUTHORITIES_CLAIM);
         if (raw instanceof List<?> list) {

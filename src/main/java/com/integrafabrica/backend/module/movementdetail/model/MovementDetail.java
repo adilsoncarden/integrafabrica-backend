@@ -3,7 +3,6 @@ package com.integrafabrica.backend.module.movementdetail.model;
 import com.integrafabrica.backend.module.movement.model.Movement;
 import com.integrafabrica.backend.module.product.model.Product;
 import com.integrafabrica.backend.module.productbatch.model.ProductBatch;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

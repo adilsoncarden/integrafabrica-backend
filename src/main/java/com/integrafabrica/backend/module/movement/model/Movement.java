@@ -13,7 +13,6 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import java.time.LocalDateTime;
 import org.hibernate.annotations.CreationTimestamp;
-
 import com.integrafabrica.backend.module.auth.model.User;
 import com.integrafabrica.backend.module.supplier.model.Supplier;
 

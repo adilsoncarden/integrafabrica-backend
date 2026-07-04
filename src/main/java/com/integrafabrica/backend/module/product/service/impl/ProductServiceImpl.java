@@ -12,7 +12,6 @@ import com.integrafabrica.backend.module.product.model.Product;
 import com.integrafabrica.backend.module.product.repository.ProductRepository;
 import com.integrafabrica.backend.module.product.service.ProductService;
 import com.integrafabrica.backend.exception.ResourceNotFoundException;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;

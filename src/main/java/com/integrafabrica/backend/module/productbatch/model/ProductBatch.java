@@ -12,7 +12,6 @@ import jakarta.persistence.Table;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import org.hibernate.annotations.CreationTimestamp;
-
 import com.integrafabrica.backend.module.product.model.Product;
 
 @Entity

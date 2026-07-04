@@ -6,7 +6,6 @@ import com.integrafabrica.backend.module.location.model.Location;
 import com.integrafabrica.backend.module.location.repository.LocationRepository;
 import com.integrafabrica.backend.module.location.service.LocationService;
 import com.integrafabrica.backend.exception.ResourceNotFoundException;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;

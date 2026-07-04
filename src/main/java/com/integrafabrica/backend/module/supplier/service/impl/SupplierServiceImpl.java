@@ -6,7 +6,6 @@ import com.integrafabrica.backend.module.supplier.model.Supplier;
 import com.integrafabrica.backend.module.supplier.repository.SupplierRepository;
 import com.integrafabrica.backend.module.supplier.service.SupplierService;
 import com.integrafabrica.backend.exception.ResourceNotFoundException;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
